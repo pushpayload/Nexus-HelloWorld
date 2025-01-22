@@ -7,3 +7,6 @@
 	path = src/nexus
 	url = https://github.com/RaidcoreGG/RCGG-lib-nexus-api
 	commit = e585220d489ed27feeb2dd208845f15472e0cf04
+[submodule "src/imgui"]
+	path = src/imgui
+	url = https://github.com/RaidcoreGG/imgui
