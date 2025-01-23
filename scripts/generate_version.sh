@@ -11,7 +11,7 @@ MINUTE=$(date +%-M)
 REVISION=$((HOUR * 60 + MINUTE))
 
 # Create Version.h
-cat > ../src/version.h << EOF
+cat > "$1" << EOF
 #pragma once
 #define V_MAJOR ${YEAR}
 #define V_MINOR ${MONTH}
