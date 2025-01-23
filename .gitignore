@@ -45,6 +45,7 @@ CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
 out/build
+src/version.h
 
 ## Visual Studio
 .vs
