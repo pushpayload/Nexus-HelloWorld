@@ -31,6 +31,7 @@ This template provides a basic structure for creating Nexus addons, implementing
   - Quick access menu entries
 
 ## Project Structure
+
 ```
 Nexus-HelloWorld/
 ├── src/
@@ -44,6 +45,7 @@ Nexus-HelloWorld/
 │ └── generate_version.sh # Version generation for Linux
 └── CMakeLists.txt # CMake build configuration
 ```
+
 ## Building
 
 This project can be built on both Windows and Linux, but will always produce a Windows DLL as the final output since Nexus addons are Windows DLLs.
@@ -64,18 +66,66 @@ This project can be built on both Windows and Linux, but will always produce a W
 
 #### Using Command Line
 
-    cmake -B build
-    cmake --build build --config Release
+Debug build:
+
+```cmd
+cmake --preset x64-debug && cmake --build --preset x64-debug
+```
+
+Release build:
+
+```cmd
+cmake --preset x64-release && cmake --build --preset x64-release
+```
 
 ### Linux
 
-    cmake -B build
-    cmake --build build
+#### Prerequisites
 
-The compiled addon will be output as `Nexus-HelloWorld.dll` in the `build/bin` directory.
+On Debian/Ubuntu:
+
+```bash
+sudo apt install build-essential cmake ninja-build mingw-w64
+```
+
+On Arch Linux:
+
+```bash
+sudo pacman -S base-devel cmake ninja mingw-w64-gcc
+```
+
+On Fedora:
+
+```bash
+sudo dnf install cmake ninja-build mingw64-gcc-c++ mingw64-winpthreads-static
+```
+
+#### Building
+
+Debug build:
+
+```bash
+cmake --preset linux-debug && cmake --build --preset linux-debug
+```
+
+Release build:
+
+```bash
+cmake --preset linux-release && cmake --build --preset linux-release
+```
+
+The compiled addon will be output as `Nexus-HelloWorld.dll` in the `out/build/linux-debug/bin` or `out/build/linux-release/bin` directory.
+
+Note: When building on Linux, the project uses MinGW for cross-compilation to produce a Windows DLL. The build system automatically configures:
+
+- Cross-compilation toolchain (x86_64-w64-mingw32)
+- Static linking of runtime libraries
+- Windows headers and libraries
+
+If you get "windows.h not found" errors, make sure you have the MinGW development packages installed properly for your distribution.
 
 ## Getting Started
-   
+
 1. Clone this repository (including submodules):
 
    ```
