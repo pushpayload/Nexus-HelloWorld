@@ -19,6 +19,10 @@ if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
   set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}-g++-posix)
   set(CMAKE_RC_COMPILER ${TOOLCHAIN_PREFIX}-windres)
   
+  # Add static linking flags
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
+  
   # Set the root path for finding Windows libraries/headers
   set(CMAKE_FIND_ROOT_PATH /usr/${TOOLCHAIN_PREFIX})
   set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
