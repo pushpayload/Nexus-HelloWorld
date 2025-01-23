@@ -30,21 +30,69 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Set DLL output name
 set(OUTPUT_NAME "Nexus-HelloWorld")
 
+# Add ImGui source files
+set(IMGUI_SOURCES
+    src/imgui/imgui.cpp
+    src/imgui/imgui_demo.cpp
+    src/imgui/imgui_draw.cpp
+    src/imgui/imgui_tables.cpp
+    src/imgui/imgui_widgets.cpp
+)
+
 # Add source files
 set(SOURCES
-  Nexus-HelloWorld.cpp
+    src/entry.cpp
+    src/shared.cpp
+    src/settings.cpp
+    ${IMGUI_SOURCES}  # Add ImGui sources to the build
 )
 
 # Add header files
 set(HEADERS
-  Nexus-HelloWorld.h
+  src/shared.h
+  src/settings.h
+  src/imgui/imgui.h
+  src/mumble/Mumble.h
+  src/nexus/Nexus.h
+  src/nlohmann/json.hpp
+  src/version.h
 )
 
-# Add source to this project's executable.
-add_executable (Nexus-HelloWorld ${SOURCES} ${HEADERS})
-
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET Nexus-HelloWorld PROPERTY CXX_STANDARD 20)
+# Create version.h before build (windows powershell, linux bash)
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  add_custom_command(
+    OUTPUT ${CMAKE_BINARY_DIR}/src/version.h
+    COMMAND powershell.exe -ExecutionPolicy Bypass -File ${CMAKE_SOURCE_DIR}/scripts/generate_version.ps1
+    DEPENDS ${CMAKE_SOURCE_DIR}/scripts/generate_version.ps1
+  )
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  add_custom_command(
+    OUTPUT ${CMAKE_BINARY_DIR}/src/version.h
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/scripts/generate_version.sh
+    DEPENDS ${CMAKE_SOURCE_DIR}/scripts/generate_version.sh
+  )
 endif()
 
-# TODO: Add tests and install targets if needed.
+# Add library target
+add_library(${PROJECT_NAME} SHARED 
+    ${SOURCES} 
+    ${HEADERS}
+    ${RESOURCES}
+    ${CMAKE_BINARY_DIR}/src/version.h
+)
+
+# Set output name
+set_target_properties(${PROJECT_NAME} PROPERTIES 
+    PREFIX ""
+    SUFFIX ".dll"
+    OUTPUT_NAME ${OUTPUT_NAME}
+)
+
+# Add include directories
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/imgui
+    ${CMAKE_SOURCE_DIR}/src/mumble
+    ${CMAKE_SOURCE_DIR}/src/nexus
+    ${CMAKE_SOURCE_DIR}/src/nlohmann
+)
